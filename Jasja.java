@@ -22,10 +22,10 @@ public class Jasja extends Robot {
 
         // Robot main loop
         while (true) {
-            ahead(new Random().nextInt(500));
+            ahead(new Random().nextInt(300));
             turnLeft(new Random().nextInt(180));
             turnGunRight(new Random().nextInt(360));
-            back(new Random().nextInt(400));
+            back(new Random().nextInt(200));
             turnRight(new Random().nextInt(90));
             turnGunLeft(new Random().nextInt(360));
         }
@@ -55,8 +55,8 @@ public class Jasja extends Robot {
      * onHitWall: What to do when you hit a wall
      */
     public void onHitWall(HitWallEvent e) {
+        back(new Random().nextInt(400));
         turnRight(new Random().nextInt(90));
-        back(new Random().nextInt(200));
         turnGunRight(new Random().nextInt(360));
     }
 }
