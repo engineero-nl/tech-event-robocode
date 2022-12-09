@@ -8,43 +8,45 @@ import java.awt.Color;
 /**
  * Remco - a robot by (your name here)
  */
-public class Remco extends Robot {
+public class Remco extends AdvancedRobot {
 	/**
 	 * run: RobotRemco's default behavior
 	 */
 
 	public int bulletCount = 0;
+	public boolean robotHit = false;
 
 	public void run() {
-		// Initialization of the robot should be put here
-
-		// After trying out your robot, try uncommenting the import at the top,
-		// and the next line:
 
 		setColors(Color.WHITE, Color.red, Color.BLACK); // body,gun,radar
 
-		turnGunLeft(90 + 45);
+		// Gun should be 225
+		rotateGun(225);
 
 		// Robot main loop
 		while (true) {
-			// Replace the next 4 lines with any behavior you would like
-			ahead(100);
-			turnGunRight(45);
-			ahead(30);
-			turnGunRight(45);
+			ahead(80 + (int) (Math.random() * ((125 - 80) + 1)));
+
+			if (robotHit == false) {
+				rotateGun(270);
+				ahead(25 + (int) (Math.random() * ((35 - 25) + 1)));
+				rotateGun(315);
+			}
+
 			if (bulletCount > 0) {
 				if (getGunHeat() == 0) {
 					fire(1);
 				}
 				bulletCount--;
 			}
-			ahead(30);
-			turnGunLeft(45);
-			ahead(30);
-			turnGunLeft(45);
-			// turnGunRight(360);
-			// back(100);
-			// turnGunRight(360);
+
+			if (robotHit == false) {
+				rotateGun(270);
+				ahead(25 + (int) (Math.random() * ((35 - 25) + 1)));
+				rotateGun(225);
+			}
+
+			robotHit = false;
 		}
 	}
 
@@ -53,11 +55,15 @@ public class Remco extends Robot {
 	 */
 	public void onScannedRobot(ScannedRobotEvent e) {
 		// Replace the next line with any behavior you would like
-		// fire(1);
 		bulletCount = 2;
 		if (getGunHeat() == 0) {
-			setBulletColor(new Color((int) (Math.random() * 0x1000000)));
-			fire(2);
+			if (e.getDistance() < 50) {
+				fire(Rules.MAX_BULLET_POWER);
+			} else if (e.getDistance() < 150) {
+				fire(2);
+			} else {
+				fire(1);
+			}
 		}
 	}
 
@@ -65,20 +71,22 @@ public class Remco extends Robot {
 	 * onHitByBullet: What to do when you're hit by a bullet
 	 */
 	public void onHitByBullet(HitByBulletEvent e) {
-		// Replace the next line with any behavior you would like
-		turnLeft(45);
-		ahead(50);
-		turnRight(45);
-		// back(10);
+		rotateGun(e.getBearing());
+		fire(1);
+
+		setTurnLeft(45);
+		setAhead(100);
+		execute();
+
+		setTurnRight(45);
+		setAhead(60);
+		execute();
 	}
 
 	public void onHitRobot(HitRobotEvent e) {
-		double curHeading = getGunHeading();
-		double hitRobotHeading = e.getBearing() + getHeading();
-		double diff = hitRobotHeading - curHeading;
-		turnGunLeft(diff);
+		robotHit = true;
+		rotateGun(e.getBearing());
 		fire(Rules.MAX_BULLET_POWER);
-		turnGunRight(diff);
 	}
 
 	/**
@@ -94,4 +102,25 @@ public class Remco extends Robot {
 			setAllColors(new Color((int) (Math.random() * 0x1000000)));
 		}
 	}
+
+	public void rotateGun(double degree) {
+		double setPoint = getGunHeading() - ((degree + getHeading()) % 360);
+		double goal;
+		if (setPoint >= 0) {
+			goal = setPoint % 360;
+			if (goal > 180) {
+				turnGunRight(goal - 180);
+			} else {
+				turnGunLeft(goal);
+			}
+		} else {
+			goal = (setPoint * -1) % 360;
+			if (goal > 180) {
+				turnGunLeft(goal - 180);
+			} else {
+				turnGunRight(goal);
+			}
+		}
+	}
+
 }
