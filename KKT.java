@@ -37,7 +37,7 @@ public class KKT extends Robot
 			for(int index=0; index <= factorBack; index++) {
 				back(50);
 				turnGunRight(360);
-				back(50m);
+				back(50);
 				turnGunRight(360);
 			}
 			turnRight((i*10));
