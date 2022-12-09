@@ -69,7 +69,7 @@ double yPos = getY();
 		// Replace the next line with any behavior you would like
 	double bearing = getHeading() + e.getBearing();
 		turnGunRight(bearing - getGunHeading());
-	fire(3);
+	fire(1);
 			ahead(20);		
 		turnGunRight(360);
 		turnRight(75);
