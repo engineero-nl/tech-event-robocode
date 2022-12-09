@@ -18,15 +18,16 @@ public class Jasja extends Robot {
      * run: Jasja's default behavior.
      */
     public void run() {
-        setColors(Color.black,Color.red,Color.white); // body,gun,radar
+        setColors(new Color(28, 30, 42),new Color(28, 30, 42),new Color(28, 30, 42)); // body,gun,radar
 
         // Robot main loop
         while (true) {
-            ahead(new Random().nextDouble(300));
-            turnLeft(new Random().nextDouble(180));
-            turnGunRight(new Random().nextDouble(360));
-            back(new Random().nextDouble(300));
-            turnGunRight(new Random().nextDouble(360));
+            ahead(new Random().nextInt(500));
+            turnLeft(new Random().nextInt(180));
+            turnGunRight(new Random().nextInt(360));
+            back(new Random().nextInt(400));
+            turnRight(new Random().nextInt(90));
+            turnGunLeft(new Random().nextInt(360));
         }
     }
 
@@ -34,22 +35,28 @@ public class Jasja extends Robot {
      * onScannedRobot: What to do when you see another robot
      */
     public void onScannedRobot(ScannedRobotEvent e) {
-        fire(1);
+        if (e.getDistance() < 100) {
+            fire(3);
+        } else {
+            fire(1);
+        }
     }
 
     /**
      * onHitByBullet: What to do when you're hit by a bullet
      */
     public void onHitByBullet(HitByBulletEvent e) {
-        turnLeft(new Random().nextDouble(90));
-        back(new Random().nextDouble(150));
+        turnLeft(new Random().nextInt(40));
+        back(new Random().nextInt(200));
+        turnGunLeft(new Random().nextInt(360));
     }
 
     /**
      * onHitWall: What to do when you hit a wall
      */
     public void onHitWall(HitWallEvent e) {
-        turnLeft(new Random().nextDouble(90));
-        back(new Random().nextDouble(200));
+        turnRight(new Random().nextInt(90));
+        back(new Random().nextInt(200));
+        turnGunRight(new Random().nextInt(360));
     }
 }
