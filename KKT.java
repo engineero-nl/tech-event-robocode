@@ -1,7 +1,7 @@
 
 package engineero;
 import robocode.*;
-//import java.awt.Color;
+import java.awt.Color;
 
 // API help : https://robocode.sourceforge.io/docs/robocode/robocode/Robot.html
 
@@ -10,32 +10,40 @@ import robocode.*;
  */
 public class KKT extends Robot
 {
+	int i = 1;
+	int factorAhead = 3;
+	int factorBack = 2;
 	/**
 	 * run: KKT's default behavior
 	 */
 	public void run() {
 		// Initialization of the robot should be put here
-		int i = 1;
-		//double height = getBattleFieldHeight();
-		//double width = getBattleFieldWidth();
-		int factorAhead = 2;
-		int factorBack = 1;
 
 		// After trying out your robot, try uncommenting the import at the top,
 		// and the next line:
 
-		// setColors(Color.red,Color.blue,Color.green); // body,gun,radar
+		 setColors(Color.black,Color.white,Color.black); // body,gun,radar
 
 		// Robot main loop
 		while(true) {
 			// Replace the next 4 lines with any behavior you would like
-			ahead(factorAhead * 100);
-			turnGunRight(360);
-			back(factorBack * 100);
-			turnGunRight(360);
-			
+
+			for(int index=0; index <= factorAhead; index++) {
+				ahead(50);
+				turnGunRight(360);
+				ahead(25);
+				turnGunRight(360);
+			}
+			for(int index=0; index <= factorBack; index++) {
+				back(50);
+				turnGunRight(360);
+				back(50m);
+				turnGunRight(360);
+			}
 			turnRight((i*10));
-			i++;
+			if (i++ > 18){
+				i = 1;
+			}
 		}
 	}
 
@@ -52,8 +60,9 @@ public class KKT extends Robot
 	 */
 	public void onHitByBullet(HitByBulletEvent e) {
 		// Replace the next line with any behavior you would like
-		back(10);
+		back(30);
 		turnLeft(90 - e.getBearing());
+		back(10);
 	}
 	
 	/**
@@ -62,9 +71,9 @@ public class KKT extends Robot
 	public void onHitWall(HitWallEvent event) {
 		// Replace the next line with any behavior you would like
        if (event.getBearing() > -90 && event.getBearing() <= 90) {
-           back(20);
+           back(50);
        } else {
-           ahead(20);
+           ahead(50);
        }
 	}
 	
@@ -72,11 +81,18 @@ public class KKT extends Robot
 	 * onHitRobot: What to do when you hit a robot
 	 */
     public void onHitRobot(HitRobotEvent event) {
+		if (event.getBearing() > -10 && event.getBearing() < 10) {
+			fire(3);
+		}
        if (event.getBearing() > -90 && event.getBearing() <= 90) {
-           back(100);
+           back(50);
        } else {
-           ahead(100);
+           ahead(75);
        }
+    }
+	
+	public void onBulletHit(BulletHitBulletEvent event) {
+       fire(1);
     }
 	
 }
