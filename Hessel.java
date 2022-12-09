@@ -1,6 +1,7 @@
 package engineero;
 import robocode.*;
-//import java.awt.Color;
+import java.awt.Color;
+import java.util.Random;
 
 // API help : https://robocode.sourceforge.io/docs/robocode/robocode/Robot.html
 
@@ -11,7 +12,18 @@ public class Hessel extends Robot
 {
 	/**g
 	 * run: Hessel's default behavior
+	 * 
+	 * 
+	 * 
+	 * 
 	 */
+	
+	Random ran = new Random();
+
+	public String getName(){
+		return "Hessel ft. Max";
+	}
+
 	public void run() {
 		// Initialization of the robot should be put here
 		
@@ -36,22 +48,37 @@ public class Hessel extends Robot
 	 */
 	public void onScannedRobot(ScannedRobotEvent e) {
 		// Replace the next line with any behavior you would like
-		fire(1);
+		if(e.getDistance() < 150){
+			fire(1);
+			if(e.getDistance() < 50){
+				fire(3);
+			}
+		}
+		
 	}
 
-	/**
-	 * onHitByBullet: What to do when you're hit by a bullet
-	 */
-	public void onHitByBullet(HitByBulletEvent e) {
-		// Replace the next line with any behavior you would like
-		back(10);
+	public void onHitRobot(HitRobotEvent e){
+		if(e.isMyFault()){
+			turnGunLeft(90);
+			fire(3);
+			fire(3);
+			turnGunRight(90);
+		}
 	}
 	
-	/**
-	 * onHitWall: What to do when you hit a wall
-	 */
+	public void onStatus(StatusEvent e){
+		randColor();
+	}
+	
 	public void onHitWall(HitWallEvent e) {
 		// Replace the next line with any behavior you would like
-		turnRight(90);
+			turnRight(90 + e.getBearing());
 	}	
+	
+	public void randColor() {
+		Color bodyColor = new Color(ran.nextInt(255), ran.nextInt(255), ran.nextInt(255));
+		Color gunColor = new Color(ran.nextInt(255), ran.nextInt(255), ran.nextInt(255));
+		Color radarColor = new Color(ran.nextInt(255), ran.nextInt(255), ran.nextInt(255));
+		setColors(bodyColor, gunColor, radarColor); // body,gun,radar
+	}
 }
