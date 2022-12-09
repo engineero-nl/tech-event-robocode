@@ -20,22 +20,45 @@ public class Sander extends Robot
 		// and the next line:
 
 		goToCenter();
-		//ahead(getBattleFieldWidth()/4);// center /2
-setAdjustGunForRobotTurn(true);
+		ahead(getBattleFieldWidth()/4);// center /2
+		turnLeft(90);
+		LookToRight();
+//setAdjustGunForRobotTurn(true);
 		// setColors(Color.red,Color.blue,Color.green); // body,gun,radar
-
+	double width= getBattleFieldWidth();
+	double height = getBattleFieldWidth();
 		// Robot main loop
 		while(true) {
-			// Replace the next 4 lines with any behavior you would like
-				//goToCenter();
-		//	turnAheadLeft(10, 10);
-		ahead(getBattleFieldWidth()/20);		
-		turnGunLeft(getBattleFieldHeight()/19);
-		turnRight(40);
-			//turnGunRight(270);
-			//back(100);
-			//turnGunRight(360);
-			//+
+		//ahead(20);		
+	//	turnGunRight(360);
+	//	turnRight(75);
+
+	double xPos = getX();
+	if (xPos +10 >		width)
+	{
+		LookToRight();
+		back(100);
+	}
+	xPos = getX();
+	if (getX() < 10 )
+	{
+		LookToRight();
+		ahead(100);
+	}
+double yPos = getY();
+		if ((yPos +10) > height)
+	{
+		LookToRight();
+		turnLeft(90);
+		ahead(100);
+	}
+	 yPos = getY();
+		if ( yPos < 10 )
+	{
+			LookToRight();
+		turnRight(90);
+		ahead(100);
+	}
 		}
 	}
 
@@ -44,7 +67,12 @@ setAdjustGunForRobotTurn(true);
 	 */
 	public void onScannedRobot(ScannedRobotEvent e) {
 		// Replace the next line with any behavior you would like
-		fire(1);
+	double bearing = getHeading() + e.getBearing();
+		turnGunRight(bearing - getGunHeading());
+	fire(3);
+			ahead(20);		
+		turnGunRight(360);
+		turnRight(75);
 	}
 
 	/**
@@ -54,8 +82,9 @@ setAdjustGunForRobotTurn(true);
 		// Replace the next line with any behavior you would like
 		back(getBattleFieldHeight()/5);
 		turnRight(90);
+	
 		ahead(getBattleFieldWidth()/5);
-		goToCenter();
+	//	goToCenter();
 	}
 	
 	/**
@@ -63,19 +92,22 @@ setAdjustGunForRobotTurn(true);
 	 */
 	public void onHitWall(HitWallEvent e) {
 		// Replace the next line with any behavior you would like
-		back(getBattleFieldWidth()/5);
+	back(getBattleFieldHeight()/5);
 		turnRight(90);
-		ahead(getBattleFieldHeight()/5);
-		goToCenter();
+		ahead(getBattleFieldWidth()/5);	
+//	goToCenter();
 	}	
-	
+
     public void goToCenter()
 	{
-		double xCenter = getBattleFieldWidth()/2;
+	    double xCenter = getBattleFieldWidth()/2;
 		double yCenter = getBattleFieldHeight()/2;	
-    	double xLoc = getX();
-		double yloc=  getY();
-
+    	LookToRight();
+		back(50);
+		ahead(30);
+	turnRight(60);
+double xLoc = getX();
+		double yLoc=getY();
 		if (xLoc < (xCenter))
 		{
 			ahead(xCenter-xLoc);
@@ -84,6 +116,26 @@ setAdjustGunForRobotTurn(true);
 		{
 			back(xCenter - xLoc);
 		}
+	/// Y coordinates
+		turnRight(90);
+		yLoc =  getY();
+		if (yLoc < (yCenter))
+		{
+			ahead(yCenter-yLoc);
+		}
+		else
+		{
+			back(yCenter - yLoc);
+		}
 
+	}
+	
+	public void LookToRight()
+	{
+	if (getHeading() < 90) {
+			turnRight(90 - getHeading());
+		} else {
+			turnLeft(getHeading() - 90);
+		}
 	}
 }
